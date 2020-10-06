@@ -94,5 +94,23 @@ async function mainQuestions() {
     }
     // Append this employee to an array of all team members
     teamArray.push(newEmployee);
+
+    const addMore = await inquirer.prompt(
+        {
+            type:"list",
+            message:"Would you like to add another team member?",
+            choices:["Yes","No"],
+            name:"addMore"
+        }
+    );
+
+    // Conditionals to ask employee questions again if user wants to add another member, or build the HTML page if the user is done adding members
+    if (addMore.addMore === "Yes") {
+        console.log("==================");
+        mainQuestions();
+    }
+    else {
+        console.log("time to build the html",teamArray)
+    }
 }
 mainQuestions();
