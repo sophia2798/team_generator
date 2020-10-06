@@ -11,6 +11,7 @@ console.log("Let's create your development team!");
 
 // Set global variables
 let HTMLString = "";
+let teamArray = [];
 
 // Set function that calls main set of questions
 // Wrap in async function to wait for responses from employee questions before branching out into other role specific questions
@@ -58,6 +59,40 @@ async function mainQuestions() {
     ]);
 
     // Display different set of questions depending on role of employee
-    if (mainQuestions.role === )
+    if (employeeQuestions.role === "Engineer") {
+        inquirer.prompt(
+            {
+                type:"input",
+                message:"What is this engineer's GitHub username?",
+                name:"github"
+            }
+        ).then(response => {
+            const newEmployee = new Engineer(employeeQuestions.name, employeeQuestions.id,employeeQuestions.email,response.github);
+        });
+    }
+    else if (employeeQuestions.role === "Intern") {
+        inquirer.prompt(
+            {
+                type:"input",
+                message:"What school does this intern attend?",
+                name:"school"
+            }
+        ).then(response => {
+            const newEmployee = new Intern(employeeQuestions.name, employeeQuestions.id,employeeQuestions.email,response.school);
+        });
+    }
+    else {
+        inquirer.prompt(
+            {
+                type:"input",
+                message:"What is the manager's office number?",
+                name:"officeNumber"
+            }
+        ).then(response => {
+            const newEmployee = new Manager(employeeQuestions.name, employeeQuestions.id,employeeQuestions.email,response.officeNumber);
+        })
+    }
+    // Append this employee to an array of all team members
+    teamArray.push(newEmployee);
 }
 mainQuestions();
