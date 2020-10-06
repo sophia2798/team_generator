@@ -1,0 +1,28 @@
+{
+  "name": "team_generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sophia2798/team_generator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sophia2798/team_generator/issues"
+  },
+  "homepage": "https://github.com/sophia2798/team_generator#readme",
+  "dependencies": {
+    "inquirer": "^7.3.3",
+    "jest": "^26.5.0"
+  }
+}
