@@ -4,7 +4,7 @@ const { test, expect } = require("@jest/globals");
 // Test that user can set the intern's school
 test("Can set intern's GitHub school", () => {
     const testEmployee = new Intern("testName",1,"janedoe@test.com","Test University");
-    expect(testEmployee.github).toBe("Test University");
+    expect(testEmployee.school).toBe("Test University");
 });
 
 // Test user can retreive intern's school by calling the getSchool() function
