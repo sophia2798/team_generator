@@ -1,5 +1,4 @@
 const Employee = require("../lib/employee");
-const { expect, test } = require("@jest/globals");
 
 // Test that it output is an object
 test("Accepts an object argument", () => {
