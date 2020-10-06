@@ -115,9 +115,53 @@ async function mainQuestions() {
 }
 
 // Function to create the member cards
-const createCard = (role,name,id,email) => {
+const createCard = (role,name,id,email,uniqueProperty) => {
     // Read the correct HTML template
     const card = fs.readFile(`./templates/${role}.html`, "utf8");
-    
+    card = card.replace("name",name);
+    card = card.replace("role",role);
+    card = card.replace("ID",id);
+    card = card.replace("Email",email);
+    card =card.replace("Test",uniqueProperty);
+    fs.appendFile("./output/team.html",card,function(err){
+        if (err) throw err;
+    });
+    console.log("Member card has been added!")
+};
+
+// Function to generate team.html page
+const createHTML = () => {
+    // Retrieve main template
+    const mainTemplate = fs.readFile("./templates/main.html", "utf8");
+    // Write team page from main template
+    const teamPage = fs.writeFile("./output/team.html",mainTemplate,function(err){
+        if (err) throw err;
+    });
+
+    // Create cards from team array
+    teamArray.forEach(member) {
+        if(member.role === "Engineer") {
+            createCard(member.getRole(),member.getName(),member.getId(),member.getEmail(),`GitHub Username: ${member.getGithub()}`);
+        }
+        if(member.role === "Intern") {
+            createCard(member.getRole(),member.getName(),member.getId(),member.getEmail(),`School: ${member.getSchool()}`);
+        }
+        else {
+            createCard(member.getRole(),member.getName(),member.getId(),member.getEmail(),`Office Number: ${member.getOfficeNumber()}`);
+        }
+    }
+
+    // Append ending tags
+    fs.appendFile("./output/team.html",`</div>
+    </article>
+    <!-- Buffer columns to center the content -->
+    <div class="col-1">&nbsp</div>
+    </section>
+    </body>
+    </html>`
+    , function(err){
+        if (err) throw err;
+    });
 }
+
 mainQuestions();
