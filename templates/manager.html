@@ -1,13 +1,13 @@
 <!-- Template for the manager role, text content is written as template literals-->
 <article class="card mb-3" style="max-width: 18rem;">
     <div class="card-header text-white bg-dark">Header</div>
-        <h2 id="manager-name">${manager.name}</h2>
-        <h5 id="manager-role">${manager.role}</h5>
+        <h2 id="name">${manager.name}</h2>
+        <h5 id="role">${manager.role}</h5>
     <div class="card-body text-dark bg-light">
       <ul class="list-group">
-          <li class="list-group-item">ID: ${manager.id}</li>
-          <li class="list-group-item">Email: ${manager.email}</li>
-          <li class="list-group-item">Office Number: ${manager.office}</li>
+          <li class="list-group-item" id="id">ID: ${manager.id}</li>
+          <li class="list-group-item" id="email">Email: ${manager.email}</li>
+          <li class="list-group-item" id="office">Office Number: ${manager.office}</li>
       </ul>
     </div>
 </article>

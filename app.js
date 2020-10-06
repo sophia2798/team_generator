@@ -113,4 +113,11 @@ async function mainQuestions() {
         console.log("time to build the html",teamArray)
     }
 }
+
+// Function to create the member cards
+const createCard = (role,name,id,email) => {
+    // Read the correct HTML template
+    const card = fs.readFile(`./templates/${role}.html`, "utf8");
+    
+}
 mainQuestions();
