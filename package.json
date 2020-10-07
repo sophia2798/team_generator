@@ -23,6 +23,7 @@
   "homepage": "https://github.com/sophia2798/team_generator#readme",
   "dependencies": {
     "inquirer": "^7.3.3",
-    "jest": "^26.5.0"
+    "jest": "^26.5.0",
+    "util": "^0.12.3"
   }
 }

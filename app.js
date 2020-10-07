@@ -6,6 +6,11 @@ const jest = require("jest");
 const Engineer = require("./lib/engineer");
 const Intern  = require("./lib/intern");
 const Manager = require("./lib/manager");
+// Async
+const util = require("util")
+const readFileAsync = util.promisify(fs.readFile);
+const writeFileAsync = util.promisify(fs.writeFile);
+const appendFileAsync = util.promisify(fs.appendFile);
 
 console.log("Let's create your development team!");
 
@@ -16,6 +21,7 @@ let teamArray = [];
 // Set function that calls main set of questions
 // Wrap in async function to wait for responses from employee questions before branching out into other role specific questions
 async function mainQuestions() {
+try {
     const employeeQuestions = await inquirer.prompt([
         {
             type:"input",
@@ -57,39 +63,39 @@ async function mainQuestions() {
             name:"role"
         }
     ]);
-
+    let newEmployee;
     // Display different set of questions depending on role of employee
     if (employeeQuestions.role === "Engineer") {
-        inquirer.prompt(
+        await inquirer.prompt(
             {
                 type:"input",
                 message:"What is this engineer's GitHub username?",
                 name:"github"
             }
         ).then(response => {
-            const newEmployee = new Engineer(employeeQuestions.name, employeeQuestions.id,employeeQuestions.email,response.github);
+            newEmployee = new Engineer(employeeQuestions.name, employeeQuestions.id,employeeQuestions.email,response.github);
         });
     }
     else if (employeeQuestions.role === "Intern") {
-        inquirer.prompt(
+        await inquirer.prompt(
             {
                 type:"input",
                 message:"What school does this intern attend?",
                 name:"school"
             }
         ).then(response => {
-            const newEmployee = new Intern(employeeQuestions.name, employeeQuestions.id,employeeQuestions.email,response.school);
+            newEmployee = new Intern(employeeQuestions.name, employeeQuestions.id,employeeQuestions.email,response.school);
         });
     }
     else {
-        inquirer.prompt(
+        await inquirer.prompt(
             {
                 type:"input",
                 message:"What is the manager's office number?",
                 name:"officeNumber"
             }
         ).then(response => {
-            const newEmployee = new Manager(employeeQuestions.name, employeeQuestions.id,employeeQuestions.email,response.officeNumber);
+            newEmployee = new Manager(employeeQuestions.name, employeeQuestions.id,employeeQuestions.email,response.officeNumber);
         })
     }
     // Append this employee to an array of all team members
@@ -110,58 +116,55 @@ async function mainQuestions() {
         mainQuestions();
     }
     else {
-        console.log("time to build the html",teamArray)
+        createHTML();
     }
+}
+catch (err) {
+    console.log(err);
+}
 }
 
 // Function to create the member cards
 const createCard = (role,name,id,email,uniqueProperty) => {
     // Read the correct HTML template
-    const card = fs.readFile(`./templates/${role}.html`, "utf8");
-    card = card.replace("name",name);
-    card = card.replace("role",role);
-    card = card.replace("ID",id);
-    card = card.replace("Email",email);
-    card =card.replace("Test",uniqueProperty);
-    fs.appendFile("./output/team.html",card,function(err){
+    fs.readFile(`./templates/${role.toLowerCase()}.html`, "utf8", function(err,card){
+        if (err) throw err;
+        card = card.replace("name",name);
+        card = card.replace("role",role);
+        card = card.replace("ID",`ID: ${id}`);
+        card = card.replace("Email",`Email: ${email}`);
+        card =card.replace("Test",uniqueProperty);
+        fs.appendFile("./output/team.html",card,function(err){
         if (err) throw err;
     });
-    console.log("Member card has been added!")
+    });
 };
 
 // Function to generate team.html page
-const createHTML = () => {
+async function createHTML() {
+    try {
     // Retrieve main template
-    const mainTemplate = fs.readFile("./templates/main.html", "utf8");
+    let mainHTML = fs.readFileSync("./templates/main.html")
     // Write team page from main template
-    const teamPage = fs.writeFile("./output/team.html",mainTemplate,function(err){
-        if (err) throw err;
+    fs.writeFileSync("./output/team.html",mainHTML,function(err){
+    if (err) throw err;
     });
-
     // Create cards from team array
-    teamArray.forEach(member) {
-        if(member.role === "Engineer") {
+    teamArray.forEach(member => {
+        if(member.getRole() === "Engineer") {
             createCard(member.getRole(),member.getName(),member.getId(),member.getEmail(),`GitHub Username: ${member.getGithub()}`);
         }
-        if(member.role === "Intern") {
+        else if(member.getRole() === "Intern") {
             createCard(member.getRole(),member.getName(),member.getId(),member.getEmail(),`School: ${member.getSchool()}`);
         }
         else {
             createCard(member.getRole(),member.getName(),member.getId(),member.getEmail(),`Office Number: ${member.getOfficeNumber()}`);
         }
-    }
-
-    // Append ending tags
-    fs.appendFile("./output/team.html",`</div>
-    </article>
-    <!-- Buffer columns to center the content -->
-    <div class="col-1">&nbsp</div>
-    </section>
-    </body>
-    </html>`
-    , function(err){
-        if (err) throw err;
     });
+    }
+    catch (err) {
+        console.log(err)
+    }
 }
 
 mainQuestions();
